@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Eksperymenty Sławosza Uznańskiego‑Wiśniewskiego — IGNIS (Prezentacja)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#07142a; --bg2:#081022; --card:#0f1724; --accent:#ff6b35; --accent-2:#ff9a5a; --muted:#9aa4b2;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg1), #041129);color:#e9f1fb}
+    .app{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px}
+    .frame{width:1100px;max-width:96%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:18px;box-shadow:0 18px 60px rgba(2,6,20,0.7);overflow:hidden}
+
+    /* Top bar */
+    header{display:flex;align-items:center;gap:18px;padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .logo{width:68px;height:68px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#071022;font-size:18px}
+    .title-wrap{flex:1}
+    h1{margin:0;font-size:20px;letter-spacing:-0.02em}
+    .sub{color:var(--muted);font-size:13px;margin-top:6px}
+
+    /* Layout */
+    .inner{display:grid;grid-template-columns:1fr 320px;gap:18px;padding:22px}
+    .slide-area{background:linear-gradient(180deg,rgba(255,255,255,0.015),transparent);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);min-height:620px;display:flex;flex-direction:column}
+    .controls{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:inherit;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#071022;font-weight:700}
+
+    /* Slide */
+    .slide{flex:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:26px;position:relative}
+    .slide h2{margin:0 0 8px 0;font-size:28px}
+    .slide p{margin:8px 0 12px 0;color:#d8e6f7}
+    .kicker{display:inline-block;background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-weight:700;color:var(--accent);margin-bottom:12px}
+
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+    .card{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* Sidebar */
+    aside{padding:12px}
+    .thumbs{display:flex;flex-direction:column;gap:10px}
+    .thumb{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:10px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,0.025)}
+    .thumb small{display:block;color:var(--muted);font-size:12px}
+    .progress{height:8px;background:rgba(255,255,255,0.03);border-radius:999px;margin-top:12px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%}
+
+    footer{padding:12px 22px;border-top:1px solid rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:980px){.inner{grid-template-columns:1fr}.slide-area{min-height:560px}}
+
+    /* Nice touches */
+    .fade-in{animation:fadeIn .6s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+    /* Print friendly */
+    @media print{body{background:white;color:black} .frame{box-shadow:none;border-radius:0} header,aside,footer{display:none} .slide h2{font-size:22px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="frame">
+      <header>
+        <div class="logo">IGNIS</div>
+        <div class="title-wrap">
+          <h1>Eksperymenty Sławosza Uznańskiego‑Wiśniewskiego — IGNIS</h1>
+          <div class="sub">Prezentacja szkolna • przygotowana w HTML • gotowa do pokazania w przeglądarce</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="prev" class="btn">◀ Poprzedni</button>
+          <button id="next" class="btn">Następny ▶</button>
+          <button id="print" class="btn primary">Druk / PDF</button>
+        </div>
+      </header>
+
+      <div class="inner">
+        <div class="slide-area">
+
+          <!-- Slides declared in JS but markup seed for accessibility -->
+          <div id="slideContainer" class="slide fade-in" aria-live="polite">
+            <!-- content filled by JS -->
+          </div>
+
+        </div>
+
+        <aside>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+            <strong>Spis slajdów</strong>
+            <small style="color:var(--muted)">9 slajdów</small>
+          </div>
+
+          <div class="thumbs" id="thumbs"></div>
+          <div class="progress" aria-hidden>
+            <i id="progBar"></i>
+          </div>
+
+          <div style="margin-top:14px;color:var(--muted);font-size:13px">
+            <strong>Porady:</strong>
+            <ul style="margin:8px 0 0 16px;color:var(--muted)">
+              <li>Użyj strzałek do zmiany slajdów</li>
+              <li>Naciśnij "Druk / PDF" aby zapisać prezentację jako PDF</li>
+              <li>Możesz dodać zdjęcia: otwórz HTML i wstaw <code>&lt;img src="twoje_zdjęcie.jpg"/&gt;</code></li>
+            </ul>
+          </div>
+
+        </aside>
+      </div>
+
+      <footer>
+        <div>Autor: Arsen Reznikov, Vadim Naumenko ;) • Prezentacja na lekcję</div>
+        <div> ♥️</div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const slides = [
+      {title:'Tytuł', k:'IGNIS', txt:'Eksperymenty wykonane na Międzynarodowej Stacji Kosmicznej przez Sławosza Uznańskiego‑Wiśniewskiego. Krótki przegląd celów misji i kluczowych eksperymentów.'},
+      {title:'Krótka notka o astronaucie', k:'Kim jest?', txt:'Sławosz Uznański‑Wiśniewski — polski inżynier i uczestnik misji IGNIS (Axiom Mission 4) na ISS. Reprezentował polskie projekty i prowadził eksperymenty we współpracy z POLSA i ESA.'},
+      {title:'Cel misji', k:'Dlaczego IGNIS?', txt:'Celem było przeprowadzenie eksperymentów opracowanych przez polskie zespoły — medycyna, materiały, technologie — oraz demonstracje komercyjne i naukowe na ISS.'},
+      {title:'Kategorie eksperymentów', k:'Główne obszary', txt:'Badania człowieka, biotechnologia, technologie (np. BCI), materiały i monitorowanie promieniowania. W sumie ~13 projektów polskich plus zadania ESA.'},
+      {title:'PhotonGrav — interfejs mózg–komputer', k:'BCI w kosmosie', txt:'Pilotażowe testy interfejsu mózg‑komputer opartego na fNIRS. Badanie możliwości sterowania urządzeniami i aplikacjami w mikrograwitacji.'},
+      {title:'Immune Multiomics', k:'Układ odpornościowy', txt:'Wielowymiarowa analiza immunologiczna — sekwencjonowanie, proteomika i metabolomika, by zrozumieć wpływ mikrograwitacji na odpowiedź immunologiczną.'},
+      {title:'RADMON i materiały', k:'Promieniowanie & materiały', txt:'RADMON — monitor promieniowania. Testy advanced materials (np. MXene) w LEO, analiza degradacji i ochrony radiacyjnej.'},
+      {title:'Wnioski', k:'Znaczenie', txt:'Misja zwiększyła doświadczenie polskich naukowców i firm, przyspieszyła rozwój technologii medycznych i materiałowych oraz wzmocniła pozycję Polski w sektorze kosmicznym.'},
+      {title:'Źródła i podziękowania', k:'Źródła', txt:'Materiały POLSA, ESA, Axiom Space oraz artykuły prasowe o misji IGNIS — można dodać konkretne linki do slajdu źródeł.'}
+    ];
+
+    const container = document.getElementById('slideContainer');
+    const thumbs = document.getElementById('thumbs');
+    const progBar = document.getElementById('progBar');
+    let index=0;
+
+    function render(){
+      const s = slides[index];
+      container.innerHTML = `
+        <div class=\"kicker\">${s.k}</div>
+        <h2>${s.title}</h2>
+        <p>${s.txt}</p>
+        <div class=\"content-grid\">
+          <div class=\"card\">
+            <strong>Kluczowe punkty:</strong>
+            <ul>
+              <li>Cel: rozwój nauki i technologii</li>
+              <li>Współpraca: POLSA • ESA • Axiom Space</li>
+              <li>Liczba eksperymentów: ok. 13 (polskich)</li>
+            </ul>
+          </div>
+          <div class=\"card\">
+            <strong>W praktyce:</strong>
+            <p>Wyniki dostarczają danych dla medycyny, materiałoznawstwa i neurotechnologii. Mogą mieć zastosowanie na Ziemi.</p>
+          </div>
+        </div>`;
+
+      // update progress
+      progBar.style.width = `${(index+1)/slides.length*100}%`;
+
+      // highlight thumbnail
+      Array.from(thumbs.children).forEach((t,i)=>{
+        t.style.opacity = i===index?1:0.7;
+        t.style.border = i===index? '1px solid rgba(255,255,255,0.08)': '1px solid rgba(255,255,255,0.02)';
+      });
+    }
+
+    // build thumbs
+    slides.forEach((s,i)=>{
+      const el = document.createElement('div');
+      el.className='thumb';
+      el.innerHTML = `<strong>${i+1}. ${s.title}</strong><small>${s.k}</small>`;
+      el.addEventListener('click',()=>{index=i;render()});
+      thumbs.appendChild(el);
+    });
+
+    document.getElementById('next').addEventListener('click',()=>{index=(index+1)%slides.length;render()});
+    document.getElementById('prev').addEventListener('click',()=>{index=(index-1+slides.length)%slides.length;render()});
+    document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight') document.getElementById('next').click(); if(e.key==='ArrowLeft') document.getElementById('prev').click(); });
+    document.getElementById('print').addEventListener('click',()=>window.print());
+
+    // init
+    render();
+  </script>
+</body>
+</html>
